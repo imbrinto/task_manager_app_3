@@ -7,7 +7,7 @@ class LoginModel {
 
   LoginModel({this.status, this.token, this.userModel});
 
-  LoginModel.fromJson(dynamic json) {
+  LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     token = json['token'];
     userModel = json['data'] != null ? UserModel.fromJson(json['data']) : null;

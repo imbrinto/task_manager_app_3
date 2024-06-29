@@ -24,4 +24,6 @@ class UserModel {
     data['photo'] = photo;
     return data;
   }
+
+  String get fullName => '${firstName ?? ''} ${lastName ?? ''}';
 }

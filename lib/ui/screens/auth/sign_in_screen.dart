@@ -13,7 +13,6 @@ import 'package:task_manager_3/ui/utilities/app_constants.dart';
 import 'package:task_manager_3/ui/widgets/background_widget.dart';
 import 'package:task_manager_3/ui/widgets/show_snackbar_message.dart';
 
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -122,32 +121,35 @@ class _SignInScreenState extends State<SignInScreen> {
       setState(() {});
     }
 
-    dynamic requestData = {
+    Map<String, dynamic> requestData = {
       "email": _emailTEController.text.trim(),
       "password": _passwordTEController.text
     };
 
     final NetworkResponse response =
-    await NetworkCaller.postRequest(Urls.login, body: requestData);
+        await NetworkCaller.postRequest(Urls.login, body: requestData);
     _signInApiInProgress = false;
     if (mounted) {
       setState(() {});
     }
 
     if (response.isSuccess) {
-      LoginModel loginModel = LoginModel.fromJson(response.responseData);
-      await AuthController.saveUserAccessToken(loginModel.token!);
-      await AuthController.saveUserData(loginModel.userModel!);
+      // LoginModel userLoginModel = LoginModel.fromJson(response.responseData);
+      // await AuthController.saveUserAccessToken(userLoginModel.token!);
+      // await AuthController.saveUserData(userLoginModel.userModel!);
+      // debugPrint(userLoginModel.token);
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainBottomNavBar()),
       );
     } else {
-      showSnackbarMessage(
-          context,
-          response.errorMessage ??
-              'Email/Password is not correct! Try again.');
+      if (mounted) {
+        showSnackbarMessage(
+            context,
+            response.errorMessage ??
+                'Email/Password is not correct! Try again.');
+      }
     }
   }
 
@@ -174,25 +176,25 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           RichText(
               text: TextSpan(
-                children: [
-                  const TextSpan(
-                    text: "Don't have account? ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextSpan(
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = _onTapNavigateSignUpPage,
-                    text: "Sign Up",
-                    style: const TextStyle(
-                      color: AppColors.themeColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              )),
+            children: [
+              const TextSpan(
+                text: "Don't have account? ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextSpan(
+                recognizer: TapGestureRecognizer()
+                  ..onTap = _onTapNavigateSignUpPage,
+                text: "Sign Up",
+                style: const TextStyle(
+                  color: AppColors.themeColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ],
+          )),
         ],
       ),
     );

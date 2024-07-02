@@ -24,6 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  LoginModel userLoginModel = LoginModel();
   bool _signInApiInProgress = false;
   bool _showPassword = false;
 
@@ -126,18 +127,24 @@ class _SignInScreenState extends State<SignInScreen> {
       "password": _passwordTEController.text
     };
 
-    final NetworkResponse response =
+    final NetworkResponse response1 =
         await NetworkCaller.postRequest(Urls.login, body: requestData);
     _signInApiInProgress = false;
     if (mounted) {
       setState(() {});
     }
 
-    if (response.isSuccess) {
-      // LoginModel userLoginModel = LoginModel.fromJson(response.responseData);
-      // await AuthController.saveUserAccessToken(userLoginModel.token!);
-      // await AuthController.saveUserData(userLoginModel.userModel!);
-      // debugPrint(userLoginModel.token);
+    print('Response Status Code: ${response1.statusCode}');
+    print('Response Data: ${response1.responseData}');
+    print('outside this ');
+    if (response1.isSuccess) {
+      print("above login model");
+      LoginModel userLoginModel = LoginModel.fromJson(response1.responseData);
+      print('under login model');
+      await AuthController.saveUserAccessToken(userLoginModel.token!);
+      // await AuthController.saveUserData(userLoginModel.data.firstName!);
+      print('inside this function');
+      debugPrint(userLoginModel.token);
 
       Navigator.pushReplacement(
         context,
@@ -147,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
       if (mounted) {
         showSnackbarMessage(
             context,
-            response.errorMessage ??
+            response1.errorMessage ??
                 'Email/Password is not correct! Try again.');
       }
     }
